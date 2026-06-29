@@ -16,7 +16,7 @@ import (
 )
 
 type Gateway struct {
-	iamClient iam.IAMServiceClient
+	iamClient proto.IAMServiceClient
 	rdb       *redis.Client
 }
 
@@ -90,7 +90,7 @@ func (g *Gateway) handleValidateKey(w http.ResponseWriter, r *http.Request) {
 	rpcCtx, cancel := context.WithTimeout(ctx, 1*time.Second)
 	defer cancel()
 
-	res, err := g.iamClient.VerifyAPIKey(rpcCtx, &iam.VerifyKeyRequest{
+	res, err := g.iamClient.VerifyAPIKey(rpcCtx, &proto.VerifyKeyRequest{
 		ApiKey:   apiKey,
 		TenantId: tenantID,
 	})
@@ -113,9 +113,12 @@ func (g *Gateway) handleValidateKey(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 3. Success response
+// 3. Success response with Cryptographic Proof
 	json.NewEncoder(w).Encode(map[string]string{
-		"status": "authorized",
-		"tier":   res.ClientTier,
+		"status":    "authorized",
+		"tier":      res.ClientTier,
+		"payload":   res.SignedPayload,
+		"signature": res.Signature,
 	})
 }
 
@@ -133,7 +136,7 @@ func main() {
 	defer conn.Close()
 
 	gw := &Gateway{
-		iamClient: iam.NewIAMServiceClient(conn),
+		iamClient: proto.NewIAMServiceClient(conn),
 		rdb:       rdb,
 	}
 

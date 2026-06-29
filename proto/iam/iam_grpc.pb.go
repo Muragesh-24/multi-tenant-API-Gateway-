@@ -4,7 +4,7 @@
 // - protoc             v7.35.1
 // source: proto/iam.proto
 
-package iam
+package proto
 
 import (
 	context "context"
@@ -19,14 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	IAMService_VerifyAPIKey_FullMethodName = "/iam.IAMService/VerifyAPIKey"
+	IAMService_VerifyAPIKey_FullMethodName = "/proto.IAMService/VerifyAPIKey"
 )
 
 // IAMServiceClient is the client API for IAMService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// IAMService handles secure internal token verification and client tenant validation
 type IAMServiceClient interface {
 	VerifyAPIKey(ctx context.Context, in *VerifyKeyRequest, opts ...grpc.CallOption) (*VerifyKeyResponse, error)
 }
@@ -52,8 +50,6 @@ func (c *iAMServiceClient) VerifyAPIKey(ctx context.Context, in *VerifyKeyReques
 // IAMServiceServer is the server API for IAMService service.
 // All implementations must embed UnimplementedIAMServiceServer
 // for forward compatibility.
-//
-// IAMService handles secure internal token verification and client tenant validation
 type IAMServiceServer interface {
 	VerifyAPIKey(context.Context, *VerifyKeyRequest) (*VerifyKeyResponse, error)
 	mustEmbedUnimplementedIAMServiceServer()
@@ -112,7 +108,7 @@ func _IAMService_VerifyAPIKey_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var IAMService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "iam.IAMService",
+	ServiceName: "proto.IAMService",
 	HandlerType: (*IAMServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

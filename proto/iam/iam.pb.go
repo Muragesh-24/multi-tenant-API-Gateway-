@@ -4,7 +4,7 @@
 // 	protoc        v7.35.1
 // source: proto/iam.proto
 
-package iam
+package proto
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -76,7 +76,9 @@ func (x *VerifyKeyRequest) GetTenantId() string {
 type VerifyKeyResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	IsValid       bool                   `protobuf:"varint,1,opt,name=is_valid,json=isValid,proto3" json:"is_valid,omitempty"`
-	ClientTier    string                 `protobuf:"bytes,2,opt,name=client_tier,json=clientTier,proto3" json:"client_tier,omitempty"` // e.g., "basic", "premium" (used for leaky bucket rate scaling)
+	ClientTier    string                 `protobuf:"bytes,2,opt,name=client_tier,json=clientTier,proto3" json:"client_tier,omitempty"`
+	Signature     string                 `protobuf:"bytes,3,opt,name=signature,proto3" json:"signature,omitempty"`                              // NEW: The RSA cryptographic signature
+	SignedPayload string                 `protobuf:"bytes,4,opt,name=signed_payload,json=signedPayload,proto3" json:"signed_payload,omitempty"` // NEW: The exact string that was signed
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -125,21 +127,37 @@ func (x *VerifyKeyResponse) GetClientTier() string {
 	return ""
 }
 
+func (x *VerifyKeyResponse) GetSignature() string {
+	if x != nil {
+		return x.Signature
+	}
+	return ""
+}
+
+func (x *VerifyKeyResponse) GetSignedPayload() string {
+	if x != nil {
+		return x.SignedPayload
+	}
+	return ""
+}
+
 var File_proto_iam_proto protoreflect.FileDescriptor
 
 const file_proto_iam_proto_rawDesc = "" +
 	"\n" +
-	"\x0fproto/iam.proto\x12\x03iam\"H\n" +
+	"\x0fproto/iam.proto\x12\x05proto\"H\n" +
 	"\x10VerifyKeyRequest\x12\x17\n" +
 	"\aapi_key\x18\x01 \x01(\tR\x06apiKey\x12\x1b\n" +
-	"\ttenant_id\x18\x02 \x01(\tR\btenantId\"O\n" +
+	"\ttenant_id\x18\x02 \x01(\tR\btenantId\"\x94\x01\n" +
 	"\x11VerifyKeyResponse\x12\x19\n" +
 	"\bis_valid\x18\x01 \x01(\bR\aisValid\x12\x1f\n" +
 	"\vclient_tier\x18\x02 \x01(\tR\n" +
-	"clientTier2K\n" +
+	"clientTier\x12\x1c\n" +
+	"\tsignature\x18\x03 \x01(\tR\tsignature\x12%\n" +
+	"\x0esigned_payload\x18\x04 \x01(\tR\rsignedPayload2O\n" +
 	"\n" +
-	"IAMService\x12=\n" +
-	"\fVerifyAPIKey\x12\x15.iam.VerifyKeyRequest\x1a\x16.iam.VerifyKeyResponseB\vZ\tproto/iamb\x06proto3"
+	"IAMService\x12A\n" +
+	"\fVerifyAPIKey\x12\x17.proto.VerifyKeyRequest\x1a\x18.proto.VerifyKeyResponseB\bZ\x06/protob\x06proto3"
 
 var (
 	file_proto_iam_proto_rawDescOnce sync.Once
@@ -155,12 +173,12 @@ func file_proto_iam_proto_rawDescGZIP() []byte {
 
 var file_proto_iam_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_iam_proto_goTypes = []any{
-	(*VerifyKeyRequest)(nil),  // 0: iam.VerifyKeyRequest
-	(*VerifyKeyResponse)(nil), // 1: iam.VerifyKeyResponse
+	(*VerifyKeyRequest)(nil),  // 0: proto.VerifyKeyRequest
+	(*VerifyKeyResponse)(nil), // 1: proto.VerifyKeyResponse
 }
 var file_proto_iam_proto_depIdxs = []int32{
-	0, // 0: iam.IAMService.VerifyAPIKey:input_type -> iam.VerifyKeyRequest
-	1, // 1: iam.IAMService.VerifyAPIKey:output_type -> iam.VerifyKeyResponse
+	0, // 0: proto.IAMService.VerifyAPIKey:input_type -> proto.VerifyKeyRequest
+	1, // 1: proto.IAMService.VerifyAPIKey:output_type -> proto.VerifyKeyResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

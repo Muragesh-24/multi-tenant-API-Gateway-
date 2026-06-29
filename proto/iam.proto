@@ -1,10 +1,9 @@
 syntax = "proto3";
 
-package iam;
+package proto; // Changed to match your current setup
 
-option go_package = "proto/iam";
+option go_package = "/proto";
 
-// IAMService handles secure internal token verification and client tenant validation
 service IAMService {
     rpc VerifyAPIKey (VerifyKeyRequest) returns (VerifyKeyResponse);
 }
@@ -16,5 +15,7 @@ message VerifyKeyRequest {
 
 message VerifyKeyResponse {
     bool is_valid = 1;
-    string client_tier = 2; // e.g., "basic", "premium" (used for leaky bucket rate scaling)
+    string client_tier = 2; 
+    string signature = 3;      // NEW: The RSA cryptographic signature
+    string signed_payload = 4; // NEW: The exact string that was signed
 }
